@@ -46,7 +46,16 @@ object BappXMLFormat {
   }
 
   implicit object EntryFormat extends Format[Entry] {
-    def convertFromXML(xml: Elem) = null
+    def convertFromXML(xml: Elem) =
+      Entry(
+        id = xml \ "id" \ text head,
+        title = (xml \ "title").map(t =>
+          t.attrs("type") match {
+            case "text" => Text(t \ text head)
+            case "html" => Html(t \ text head)
+            case "xhtml" => Xhtml(t \ * toString)
+          }).head
+      )
 
     def convertToXML(e: Entry) = {
       atomelem("entry",

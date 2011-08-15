@@ -1,26 +1,17 @@
 package org.smop.bapp.server
 
+import actors.CreateEntry
 import cc.spray._
-import http.{HttpContent, ContentTypeRange, StatusCodes}
+import http.StatusCodes
 import http.MediaTypes._
-import marshalling.UnmarshallerBase
 import com.codecommit.antixml._
+import marshallers.Marshallers._
+import org.smop.bapp.model.BappXMLFormat._
+import org.smop.bapp.model.Entry
+import akka.actor.ActorRef
 
 trait BappService extends Directives {
-  implicit object AntiXMLUnmarshaller extends UnmarshallerBase[Elem] {
-    val canUnmarshalFrom = ContentTypeRange(`text/xml`) ::
-                           ContentTypeRange(`text/html`) ::
-                           ContentTypeRange(`application/xhtml+xml`) ::
-                           ContentTypeRange(`application/atom+xml`) :: Nil
-
-    def unmarshal(content: HttpContent) = protect {
-      if (content.contentType.charset.isDefined) {
-        XML.fromString(StringUnmarshaller.unmarshal(content).right.get)
-      } else {
-        XML.fromInputStream(content.inputStream)
-      }
-    }
-  }
+  val dao: ActorRef
 
   val bappService = {
     path("") {
@@ -38,9 +29,12 @@ trait BappService extends Directives {
     path("blog/main") {
       post {
         content(as[Elem]) { xml =>
-          println(xml)
+          val entry = fromXML[Entry](xml)
+          println(entry)
+          val dbentry = dao !! CreateEntry(entry)
+          println(dbentry)
           respondWithStatus(StatusCodes.Created) {
-            _.complete(xml.toString)
+            _.complete(toXML(entry).toString)
           }
         }
       }

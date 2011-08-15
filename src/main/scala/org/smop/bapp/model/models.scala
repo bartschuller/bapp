@@ -9,6 +9,7 @@ import ModelTypes._
 import com.novus.salat.annotations.raw.Salat
 import org.scala_tools.time.Imports._
 import com.codecommit.antixml.Elem
+import com.novus.salat.annotations.raw.Key
 
 @Salat sealed trait TextConstruct
 case class Text(text: String) extends TextConstruct
@@ -29,7 +30,7 @@ case class Category(term: String, scheme: Option[URI]=None, label: Option[String
 
 case class Link(href: URI, rel: Option[String]=None, mediaType: Option[String]=None, hrefLang: Option[String]=None, title: Option[String]=None, length: Option[String]=None)
 
-case class Entry(id: IRI, title: TextConstruct, summary: Option[TextConstruct] = None, content: Option[Content]=None, author: Option[List[Person]]=None, contributor: Option[List[Person]]=None, category: Option[List[Category]] = None,
+case class Entry(@Key("_id") id: IRI, title: TextConstruct, summary: Option[TextConstruct] = None, content: Option[Content]=None, author: Option[List[Person]]=None, contributor: Option[List[Person]]=None, category: Option[List[Category]] = None,
   link: Option[List[Link]]=None, published: Option[DateTime]=None, updated: DateTime = DateTime.now)
 
 case class Feed(author: List[Person])
