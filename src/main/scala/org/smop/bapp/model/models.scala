@@ -6,10 +6,9 @@ object ModelTypes {
 }
 
 import ModelTypes._
-import com.novus.salat.annotations.raw.Salat
+import com.novus.salat.global._
+import com.novus.salat.annotations._
 import org.scala_tools.time.Imports._
-import com.codecommit.antixml.Elem
-import com.novus.salat.annotations.raw.Key
 
 @Salat sealed trait TextConstruct
 case class Text(text: String) extends TextConstruct
