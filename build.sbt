@@ -66,6 +66,9 @@ libraryDependencies += "com.codecommit" %% "anti-xml" % "0.3-SNAPSHOT"
 /////////////////////////////////////////////////////////////////////
 // Bapp
 /////////////////////////////////////////////////////////////////////
+// Weird error about slf4j-api 1.6.1 not resolvable. Explicit dep:
+libraryDependencies += "org.slf4j" % "slf4j-api" % "1.6.1"
+
 initialCommands in console :=
 """
 import com.novus.salat._
@@ -73,4 +76,5 @@ import com.novus.salat.global._
 import com.mongodb.casbah.Imports._
 import org.smop.bapp.model._
 import org.smop.bapp.model.Implicits._
+import org.smop.bapp.model.BappXMLFormat._
 """
