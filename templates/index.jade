@@ -1,0 +1,17 @@
+- import org.smop.bapp.model._
+-@ import val entry: Entry
+!!! 5
+html
+  head
+    meta(charset="UTF-8")
+    title
+      - title match
+        - case Text(s) =>
+          = s
+    script(src="/js/hello.js")
+  body
+    = content.map
+      - _ match
+        - case HtmlContent(s) =>
+          != s
+

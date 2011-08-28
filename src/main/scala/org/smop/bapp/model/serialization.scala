@@ -45,6 +45,18 @@ object BappXMLFormat {
     }
   }
 
+  implicit object ContentFormat extends Format[Content] with AppendToXML[Content] {
+    def convertFromXML(xml: Elem) = null
+
+    def appendToXML(c: Content, p: Elem): Elem = c match {
+      case TextContent(t) => p.copy(attrs=p.attrs + ("type"-> "text"), children = Group(antixml.Text(t)))
+      case HtmlContent(h) => p.copy(attrs=p.attrs + ("type"-> "html"), children = Group(antixml.Text(h)))
+      case XhtmlContent(x) => p.copy(attrs=p.attrs + ("type"-> "xhtml"), children = Group(XML.fromString(x)))
+    }
+  }
+  // case class Entry(@Key("_id") id: IRI, title: TextConstruct, summary: Option[TextConstruct] = None, content: Option[Content]=None, author: Option[List[Person]]=None, contributor: Option[List[Person]]=None, category: Option[List[Category]] = None,
+//  link: Option[List[Link]]=None, published: Option[DateTime]=None, updated: DateTime = DateTime.now)
+  
   implicit object EntryFormat extends Format[Entry] {
     def convertFromXML(xml: Elem) =
       Entry(
@@ -54,15 +66,23 @@ object BappXMLFormat {
             case "text" => Text(t \ text head)
             case "html" => Html(t \ text head)
             case "xhtml" => Xhtml(t \ * toString)
-          }).head
+          }).head,
+        content = (xml \ "content").map(c =>
+          c.attrs("type") match {
+            case "text" => TextContent(c \ text mkString)
+            case "html" => HtmlContent(c \ text mkString)
+            case "xhtml" => XhtmlContent(c \ * toString)
+          }).headOption
       )
 
     def convertToXML(e: Entry) = {
       atomelem("entry",
-        atomelem("id", antixml.Text(e.id)),
-        toXML(e.title, <title/>.convert),
-        atomelem("updated", antixml.Text(e.updated)
-      ))
+        Seq(
+          Some(atomelem("id", antixml.Text(e.id))),
+          Some(toXML(e.title, <title/>.convert)),
+          Some(atomelem("updated", antixml.Text(e.updated))),
+          e.content.map(c => toXML(c, <content/>.convert))).flatten:_*
+      )
     }
   }
 

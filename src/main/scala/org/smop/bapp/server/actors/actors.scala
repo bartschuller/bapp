@@ -14,5 +14,6 @@ class MongoActor extends Actor {
     case CreateEntry(e) => self reply ResultEntry(EntryDAO.insert(e).map(
       (nid:String) =>e.copy(id=
         nid.toString)))
+    case RetrieveEntry(id) => self reply ResultEntry(EntryDAO.findOneByID(id))
   }
 }

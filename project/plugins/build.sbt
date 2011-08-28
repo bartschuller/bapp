@@ -3,7 +3,8 @@
 resolvers ++= Seq(
   "Akka Repository" at "http://akka.io/repository",
   "sbt-idea-repo" at "http://mpeltonen.github.com/maven/",
-  "Web plugin repo" at "http://siasia.github.com/maven2"
+  "Web plugin repo" at "http://siasia.github.com/maven2",
+  "less is" at "http://repo.lessis.me"
 )
 
 // This may be a bug in SBT? Mark Harrah recommended this and it fixed issues with
@@ -19,3 +20,7 @@ libraryDependencies ++= Seq(
 // Fetches the correct version of the xsbt-web-plugin for the current version of SBT. This is what gives you
 // SBT commands such as 'jetty-run' and 'jetty-stop'.
 libraryDependencies <+= sbtVersion(v => "com.github.siasia" %% "xsbt-web-plugin" % ("0.1.0-"+v))
+
+libraryDependencies <+= sbtVersion(v =>
+  "me.lessis" %% "coffeescripted-sbt" % "0.1.5-%s".format(v)
+)

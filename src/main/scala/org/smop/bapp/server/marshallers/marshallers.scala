@@ -1,10 +1,10 @@
 package org.smop.bapp.server.marshallers
 
-import cc.spray.http.{ContentTypeRange, HttpContent}
 import cc.spray.http.MediaTypes._
 import cc.spray.marshalling.DefaultUnmarshallers.StringUnmarshaller
-import cc.spray.marshalling.UnmarshallerBase
 import com.codecommit.antixml.{XML, Elem}
+import cc.spray.marshalling.UnmarshallerBase
+import cc.spray.http.{ContentTypeRange, HttpContent}
 
 object Marshallers {
 
@@ -22,5 +22,4 @@ object Marshallers {
       }
     }
   }
-
 }
