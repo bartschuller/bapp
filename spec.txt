@@ -1,0 +1,8 @@
+A CMS should
+
+- Have a good HTML source editor
+- Have a good graphical HTML editor
+
+- Provide a widget-based way to configure what appears on each page
+- Provide something better than raw spaghetti PHP and CSS when
+  you'v outgrown the widget dragging.
